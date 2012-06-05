@@ -20,4 +20,9 @@ class TestContext < MustacheTest
   def test_local_shaddows_view_class_method
     assert_equal "Hello, Josh!", @view.render(:template => "hello", :locals => { :name => "Josh" })
   end
+
+  def test_render_with_layout
+    assert_equal "<!DOCTYPE html>\n<title>Hello</title>\nHello, World!\n",
+      @view.render(:template => "hello", :layout => "application")
+  end
 end
