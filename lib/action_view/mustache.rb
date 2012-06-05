@@ -18,9 +18,6 @@ module ActionView
         controller.view_assigns.each do |name, value|
           instance_variable_set '@'+name, value
         end
-
-        # Push ivars into context for direct access from view
-        context.push controller.view_assigns
       end
 
       # Define `yield` keyword for content_for :layout
