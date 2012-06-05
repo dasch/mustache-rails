@@ -14,7 +14,7 @@ module ActionView
       end
 
       def mustache_view_class
-        return unless @virtual_path
+        return ActionView::Mustache unless @virtual_path
         klass = "#{mustache_view_namespace}/#{@virtual_path}".camelize.constantize
         unless klass < ActionView::Mustache
           raise TypeError, "#{klass} isn't a subclass of ActionView::Mustache"

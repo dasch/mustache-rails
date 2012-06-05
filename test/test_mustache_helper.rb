@@ -23,4 +23,11 @@ class TestMustacheHelper < MustacheTest
       @view.render(:template => "wrong_parent")
     end
   end
+
+  def test_inline_template_uses_default_context
+    assert_equal "view: ActionView::Mustache", @view.render({
+      :inline => "view: {{mustache_view_class}}",
+      :type => :mustache
+    })
+  end
 end
