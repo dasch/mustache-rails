@@ -18,7 +18,7 @@ class TestMustacheHelper < MustacheTest
     end
   end
 
-  def test_missing_view_class
+  def test_wrong_parent_class_view_class
     assert_raise ActionView::Template::Error do
       @view.render(:template => "wrong_parent")
     end
