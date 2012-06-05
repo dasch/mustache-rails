@@ -40,11 +40,11 @@ module ActionView
             }.to_s)
           else
             v = [v] unless v.is_a?(Array) || defined?(Enumerator) && v.is_a?(Enumerator)
-            v.each { |h|
+            for h in v
               ctx.push(h);
               #{code}
               ctx.pop;
-            }
+            end
           end
         end
         RUBY
