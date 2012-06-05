@@ -2,9 +2,7 @@ require 'rake/testtask'
 
 task :default => :test
 
-Rake::TestTask.new do |t|
-  t.warning = true
-end
+Rake::TestTask.new
 
 task :submodules do
   sh "git submodule update --init"
