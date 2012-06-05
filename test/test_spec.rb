@@ -14,7 +14,7 @@ class TestSpec < MustacheTest
     message << "Template: #{test['template'].inspect}\n"
     message << "Partials: #{(test['partials'] || {}).inspect}\n"
 
-    result = @view.render({:inline => test['template'], :type => :mustache}, :locals => test['data'])
+    result = @view.render({:inline => test['template'], :type => :mustache, :locals => test['data']})
     assert_equal test['expected'], result, message
   end
 end
@@ -28,10 +28,7 @@ Dir[path].each do |file|
 
   # TODO: Fix these
   next if name == 'Delimiters'
-  next if name == 'Interpolation'
-  next if name == 'Inverted'
   next if name == 'Partials'
-  next if name == 'Sections'
 
   klass_name = "Test#{name}Spec"
   instance_eval "class ::#{klass_name} < TestSpec; end"
