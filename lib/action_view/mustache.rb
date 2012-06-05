@@ -13,14 +13,14 @@ module ActionView
 
       self.template_name = view.instance_variable_get(:@virtual_path)
 
-      if controller =  view.controller
+      if controller = view.controller
         # Copy controller ivars into our view
-        view.controller.view_assigns.each do |name, value|
+        controller.view_assigns.each do |name, value|
           instance_variable_set '@'+name, value
         end
 
         # Push ivars into context for direct access from view
-        context.push view.controller.view_assigns
+        context.push controller.view_assigns
       end
 
       # Define `yield` keyword for content_for :layout
