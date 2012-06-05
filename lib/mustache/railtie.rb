@@ -1,5 +1,4 @@
 require 'mustache'
-require 'action_view/mustache'
 require 'rails/railtie'
 
 class Mustache
@@ -22,14 +21,12 @@ class Mustache
     end
 
     initializer 'mustache.install_helper', :after => :prepend_helpers_path do |app|
-      require 'action_view/helpers/mustache_helper'
-      ActionView::Base.send :include, ActionView::Helpers::MustacheHelper
-      ActionView::Base.mustache_view_namespace = app.config.mustache.view_namespace
+      ActiveSupport.on_load(:action_view) do
+        require 'action_view/mustache'
+        require 'action_view/template/handlers/mustache'
+        require 'action_view/helpers/mustache_helper'
+        ActionView::Base.mustache_view_namespace = app.config.mustache.view_namespace
+      end
     end
   end
-end
-
-ActiveSupport.on_load(:action_view) do
-  require 'action_view/template/handlers/mustache'
-  ActionView::Template.register_template_handler :mustache, ActionView::Template::Handlers::Mustache
 end

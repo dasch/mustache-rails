@@ -1,4 +1,6 @@
 require 'action_view'
+require 'action_view/template'
+require 'action_view/template/handlers'
 require 'action_view/mustache/generator'
 require 'mustache'
 
@@ -18,5 +20,7 @@ module ActionView
         end
       end
     end
+
+    register_template_handler :mustache, Handlers::Mustache
   end
 end

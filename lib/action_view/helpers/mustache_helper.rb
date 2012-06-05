@@ -1,13 +1,16 @@
+require 'active_support/concern'
 require 'action_view'
+require 'action_view/base'
+require 'action_view/helpers'
 require 'action_view/mustache'
 
 module ActionView
   module Helpers
     module MustacheHelper
-      def self.included(base)
-        base.instance_eval do
-          cattr_accessor :mustache_view_namespace
-        end
+      extend ActiveSupport::Concern
+
+      included do
+        cattr_accessor :mustache_view_namespace
       end
 
       def mustache_view_class
@@ -24,4 +27,6 @@ module ActionView
       end
     end
   end
+
+  Base.send :include, Helpers::MustacheHelper
 end
