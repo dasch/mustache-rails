@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["README.md", "lib/**/*"]
 
+  s.add_dependency "actionpack", "~>3.0"
   s.add_dependency "mustache", "~>0.99.4"
   s.add_development_dependency "rake"
 
