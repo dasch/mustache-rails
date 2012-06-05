@@ -18,4 +18,7 @@ class MustacheTest < Test::Unit::TestCase
     end
     assert_equal nil, @view.mustache_view_namespace
   end
+
+  def default_test
+  end
 end
