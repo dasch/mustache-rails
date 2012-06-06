@@ -4,7 +4,19 @@ require 'mustache'
 
 module ActionView
   class Mustache < ::Mustache
+    # Public: Compiles tokens from Mustache::Parser into evaluatable
+    # Ruby code.
+    #
+    # The code generate targets Rails output buffer and must be
+    # evaluated inside an ActionView::Base instance.
+    #
+    # See Mustache::Generator for more info.
     class Generator
+      # Public: Convert tokens to plain old Ruby.
+      #
+      # exp - Array of tokens produced by Mustache::Parser
+      #
+      # Returns String of compiled Ruby code.
       def compile(exp)
         src = ""
         src << "@output_buffer = output_buffer || ActionView::OutputBuffer.new;\n"
@@ -13,6 +25,11 @@ module ActionView
         src
       end
 
+      # Internal: Recursively compile token expression.
+      #
+      # exp - Token Array structure
+      #
+      # Returns String.
       def compile!(exp)
         case exp.first
         when :multi
@@ -26,7 +43,13 @@ module ActionView
         end
       end
 
-      def on_section(name, content, raw, delims)
+      # Internal: Compile section.
+      #
+      # name    - String of section name
+      # content - Array of section content tokens
+      #
+      # Returns String.
+      def on_section(name, content, _, _)
         code = compile!(content)
 
         <<-RUBY
@@ -51,7 +74,13 @@ module ActionView
         RUBY
       end
 
-      def on_inverted_section(name, content, raw, _)
+      # Internal: Compile inverted section.
+      #
+      # name    - String of section name
+      # content - Array of section content tokens
+      #
+      # Returns String.
+      def on_inverted_section(name, content, _, _)
         code = compile!(content)
 
         <<-RUBY
@@ -62,10 +91,21 @@ module ActionView
         RUBY
       end
 
+      # Internal: Compile partial render call.
+      #
+      # name        - String of partial name
+      # indentation - String of indentation level
+      #
+      # Returns String.
       def on_partial(name, indentation)
         "@output_buffer.concat(render(:partial => #{name.inspect}));\n"
       end
 
+      # Internal: Compile unescaped tag.
+      #
+      # name - String name of tag
+      #
+      # Returns String.
       def on_utag(name)
         <<-RUBY
         v = #{compile!(name)};
@@ -76,6 +116,11 @@ module ActionView
         RUBY
       end
 
+      # Internal: Compile escaped tag.
+      #
+      # name - String name of tag
+      #
+      # Returns String.
       def on_etag(name)
         <<-RUBY
         v = #{compile!(name)};
@@ -86,6 +131,11 @@ module ActionView
         RUBY
       end
 
+      # Internal: Compile fetch lookup.
+      #
+      # names - Array of names to fetch.
+      #
+      # Returns String.
       def on_fetch(names)
         names = names.map { |n| n.to_sym }
 
@@ -103,6 +153,11 @@ module ActionView
         end
       end
 
+      # Internal: Compile static string.
+      #
+      # s - String of text.
+      #
+      # Returns String.
       def str(s)
         "@output_buffer.safe_concat(#{s.inspect});\n"
       end
