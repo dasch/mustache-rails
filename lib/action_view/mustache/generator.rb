@@ -49,7 +49,7 @@ module ActionView
       # content - Array of section content tokens
       #
       # Returns String.
-      def on_section(name, content, _, _)
+      def on_section(name, content, raw, delims)
         code = compile!(content)
 
         <<-RUBY
@@ -80,7 +80,7 @@ module ActionView
       # content - Array of section content tokens
       #
       # Returns String.
-      def on_inverted_section(name, content, _, _)
+      def on_inverted_section(name, content, raw, delims)
         code = compile!(content)
 
         <<-RUBY
