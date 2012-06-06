@@ -5,3 +5,9 @@ rvm:
   - jruby
   - rbx
   - ree
+
+env:
+  - ACTIONPACK_VERSION=3.0
+  - ACTIONPACK_VERSION=3.0.0
+  - ACTIONPACK_VERSION=3.1.0
+  - ACTIONPACK_VERSION=3.2.0
