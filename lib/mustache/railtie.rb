@@ -62,6 +62,10 @@ class Mustache
       ActiveSupport.on_load(:action_view) do
         require 'action_view/template/handlers/mustache'
         require 'action_view/helpers/mustache_helper'
+
+        # PID: Setting a global on ActionView::Baese is kinda nasty.
+        # It'd be better if ApplicationController could reference its
+        # local app configuration.
         ActionView::Base.mustache_view_namespace = app.config.mustache.view_namespace
       end
     end
