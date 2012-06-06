@@ -1,5 +1,6 @@
 require 'test/unit'
 
+require 'active_support/deprecation'
 require 'active_support/dependencies'
 require 'action_view'
 require 'action_view/template/handlers/mustache'
