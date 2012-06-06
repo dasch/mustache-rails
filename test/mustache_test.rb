@@ -2,7 +2,6 @@ require 'test/unit'
 
 require 'active_support/dependencies'
 require 'action_view'
-require 'action_view/mustache'
 require 'action_view/template/handlers/mustache'
 require 'action_view/helpers/mustache_helper'
 

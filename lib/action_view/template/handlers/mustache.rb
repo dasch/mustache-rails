@@ -1,6 +1,8 @@
 require 'action_view'
 require 'action_view/template'
 require 'action_view/template/handlers'
+require 'action_view/helpers/mustache_helper'
+require 'action_view/mustache'
 require 'action_view/mustache/generator'
 require 'mustache'
 

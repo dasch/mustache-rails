@@ -60,7 +60,6 @@ class Mustache
     # Internal: Assigns configured view namespace to ActionView context.
     initializer 'mustache.set_view_namespace' do |app|
       ActiveSupport.on_load(:action_view) do
-        require 'action_view/mustache'
         require 'action_view/template/handlers/mustache'
         require 'action_view/helpers/mustache_helper'
         ActionView::Base.mustache_view_namespace = app.config.mustache.view_namespace

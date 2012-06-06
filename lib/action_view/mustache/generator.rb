@@ -1,4 +1,5 @@
 require 'action_view'
+require 'action_view/mustache'
 require 'mustache'
 
 module ActionView
