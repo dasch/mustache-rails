@@ -19,7 +19,7 @@ module ActionView
       # Returns String of compiled Ruby code.
       def compile(exp)
         src = ""
-        src << "@output_buffer = output_buffer || ActionView::OutputBuffer.new;\n"
+        src << "@output_buffer = output_buffer || ActionView::OutputBuffer.new; "
         src << compile!(exp)
         src << "@output_buffer.to_s;"
         src
@@ -35,7 +35,7 @@ module ActionView
         when :multi
           exp[1..-1].map { |e| compile!(e) }.join
         when :static
-          str(exp[1])
+          text(exp[1])
         when :mustache
           send("on_#{exp[1]}", *exp[2..-1])
         else
@@ -52,26 +52,14 @@ module ActionView
       def on_section(name, content, raw, delims)
         code = compile!(content)
 
-        <<-RUBY
-        if v = #{compile!(name)}
-          if v == true
-            #{code}
-          elsif v.is_a?(Proc)
-            @output_buffer.concat(v.call {
-              capture {
-                #{code}
-              }
-            }.to_s)
-          else
-            v = [v] unless v.is_a?(Array) || defined?(Enumerator) && v.is_a?(Enumerator)
-            for h in v
-              ctx.push(h);
-              #{code}
-              ctx.pop;
-            end
-          end
-        end
-        RUBY
+        enum_check = defined?(Enumerator) ? "|| v.is_a?(Enumerator)" : ""
+
+        "if v = #{compile!(name)};\n" +
+          "s = lambda { #{code} }; " +
+          "if v == true; s.call; " +
+          "elsif v.is_a?(Proc); @output_buffer.concat(v.call { capture(&s); }.to_s); " +
+          "else; (v = [v] unless v.is_a?(Array) #{enum_check}); for h in v; ctx.push(h); s.call; ctx.pop; end; end;\n" +
+        "end; "
       end
 
       # Internal: Compile inverted section.
@@ -81,14 +69,10 @@ module ActionView
       #
       # Returns String.
       def on_inverted_section(name, content, raw, delims)
-        code = compile!(content)
-
-        <<-RUBY
-        v = #{compile!(name)}
-        if v.nil? || v == false || v.respond_to?(:empty?) && v.empty?
-          #{code}
-        end
-        RUBY
+        "v = #{compile!(name)}; " +
+          "if (v.nil? || v == false || v.respond_to?(:empty?) && v.empty?);\n" +
+          compile!(content) +
+        "end;\n"
       end
 
       # Internal: Compile partial render call.
@@ -107,13 +91,8 @@ module ActionView
       #
       # Returns String.
       def on_utag(name)
-        <<-RUBY
-        v = #{compile!(name)};
-        if v.is_a?(Proc)
-          v = v.call.to_s
-        end
-        @output_buffer.safe_concat(v.to_s);
-        RUBY
+        "v = #{compile!(name)}; v = v.call.to_s if v.is_a?(Proc); " +
+          "@output_buffer.safe_concat(v.to_s); "
       end
 
       # Internal: Compile escaped tag.
@@ -122,13 +101,8 @@ module ActionView
       #
       # Returns String.
       def on_etag(name)
-        <<-RUBY
-        v = #{compile!(name)};
-        if v.is_a?(Proc)
-          v = v.call.to_s
-        end
-        @output_buffer.concat(v.to_s);
-        RUBY
+        "v = #{compile!(name)}; v = v.call.to_s if v.is_a?(Proc); " +
+          "@output_buffer.concat(v.to_s); "
       end
 
       # Internal: Compile fetch lookup.
@@ -145,21 +119,18 @@ module ActionView
           "ctx[#{names.first.to_sym.inspect}]"
         else
           initial, *rest = names
-          <<-RUBY
-            #{rest.inspect}.inject(ctx[#{initial.inspect}]) { |value, key|
-              value && ctx.find(value, key)
-            }
-          RUBY
+          "#{rest.inspect}.inject(ctx[#{initial.inspect}]) { |v, k| v && ctx.find(v, k) }; "
         end
       end
 
       # Internal: Compile static string.
       #
-      # s - String of text.
+      # text - String of text.
       #
       # Returns String.
-      def str(s)
-        "@output_buffer.safe_concat(#{s.inspect});\n"
+      def text(text)
+        text = text.gsub(/['\\]/, '\\\\\&')
+        "@output_buffer.safe_concat('#{text}'); "
       end
     end
   end

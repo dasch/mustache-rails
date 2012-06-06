@@ -28,9 +28,7 @@ module ActionView
           src = ActionView::Mustache::Generator.new.compile(tokens)
 
           <<-RUBY
-            ctx = mustache_view.context
-            ctx.push local_assigns
-            #{src}
+            ctx = mustache_view.context; ctx.push(local_assigns); #{src}
           RUBY
         end
       end

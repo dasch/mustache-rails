@@ -44,17 +44,15 @@ Dir[path].each do |file|
     # BLAH
     next if name == 'Lambdas'
 
-    if name == 'Partials'
-      # Don't quite aggree with this one. Raising errors for missing
-      # partials is how Rails behaviors and makes debugging in dev
-      # mode much easier.
-      next if test['name'] == 'Failed Lookup'
+    # Don't quite aggree with this one. Raising errors for missing
+    # partials is how Rails behaviors and makes debugging in dev
+    # mode much easier.
+    next if test['name'] == 'Failed Lookup'
 
-      # Skip whitespace related tests. This type of thing doesn't really
-      # matter to much with HTML. Though if someone wants to fix it without
-      # causing a performance regression, PID.
-      next if test['name'] =~ /Standalone/
-    end
+    # Skip whitespace related tests. This type of thing doesn't really
+    # matter to much with HTML. Though if someone wants to fix it without
+    # causing a performance regression, PID.
+    next if test['name'] =~ /Indentation|Line Endings|Previous Line|Without Newline/
 
     test_suite.define_test_method(test)
   end
