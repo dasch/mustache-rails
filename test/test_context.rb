@@ -22,7 +22,7 @@ class TestContext < MustacheTest
   end
 
   def test_render_with_layout
-    assert_equal "<!DOCTYPE html>\n<title>Hello</title>\nHello, World!\n",
+    assert_equal "<!DOCTYPE html>\n<title>Hello</title>\nHello, World!\nGoodbye!",
       @view.render(:template => "hello", :layout => "application")
   end
 end
