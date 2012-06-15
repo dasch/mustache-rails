@@ -21,6 +21,11 @@ class TestContext < MustacheTest
     assert_equal "Hello, Josh!", @view.render(:template => "hello", :locals => { :name => "Josh" })
   end
 
+  def test_render_nested_objects
+    assert_equal "<h1>Category A</h1>\n<h2>Topic 1</h2>\n<h1>Category B</h1>\n",
+      @view.render(:template => "nested")
+  end
+
   def test_render_with_layout
     assert_equal "<!DOCTYPE html>\n<title>Hello</title>\nHello, World!\n",
       @view.render(:template => "hello", :layout => "application")
