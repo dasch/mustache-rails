@@ -5,7 +5,7 @@ Implements Mustache views and templates for Rails 3.x
 ## Installation
 
 ``` ruby
-gem "mustache-rails", :require => "mustache/railtie"
+gem 'mustache-rails', :require => 'mustache/railtie'
 ```
 
 Or alternatively `require 'mustache/railtie'` in your `config/application.rb`.
