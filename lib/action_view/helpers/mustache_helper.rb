@@ -37,7 +37,13 @@ module ActionView
       # Returns Class or raises a TypeError.
       def mustache_view_class
         return ActionView::Mustache unless @virtual_path
-        klass = "#{mustache_view_namespace}/#{@virtual_path}".camelize.constantize
+        klass_name = "#{mustache_view_namespace}/#{@virtual_path}".camelize
+        begin
+          klass = klass.constantize
+        rescue NameError => e
+          load_path = ActiveSupport::Dependencies.autoload_paths.map { |p| "  #{p}\n" }.join
+          raise NameError, "Couldn't find #{klass_name}:\n#{load_path}"
+        end
         unless klass < ActionView::Mustache
           raise TypeError, "#{klass} isn't a subclass of ActionView::Mustache"
         end
