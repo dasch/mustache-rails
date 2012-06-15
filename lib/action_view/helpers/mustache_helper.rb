@@ -42,7 +42,7 @@ module ActionView
           klass = klass.constantize
         rescue NameError => e
           load_path = ActiveSupport::Dependencies.autoload_paths.map { |p| "  #{p}\n" }.join
-          raise NameError, "Couldn't find #{klass_name}:\n#{load_path}"
+          raise NameError, "Couldn't find #{klass_name}\n#{load_path}"
         end
         unless klass < ActionView::Mustache
           raise TypeError, "#{klass} isn't a subclass of ActionView::Mustache"
