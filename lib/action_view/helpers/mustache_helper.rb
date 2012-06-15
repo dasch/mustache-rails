@@ -39,7 +39,7 @@ module ActionView
         return ActionView::Mustache unless @virtual_path
         klass_name = "#{mustache_view_namespace}/#{@virtual_path}".camelize
         begin
-          klass = klass.constantize
+          klass = klass_name.constantize
         rescue NameError => e
           load_path = ActiveSupport::Dependencies.autoload_paths.map { |p| "  #{p}\n" }.join
           raise NameError, "Couldn't find #{klass_name}\n#{load_path}"
