@@ -28,11 +28,14 @@ class Mustache
 
     # Public: Relative path to mustache view classes.
     #
-    # Defaults to "app/views". Its highly recommended to keep the
-    # default value.
+    # Defaults to "app". Since "::Views::Blog::Show" will
+    # automatically look up "app/" + "views/blog/show".
+    #
+    # If you want to drop the namespace, this should be set to
+    # "app/views".
     #
     # Returns String.
-    config.mustache.view_path = "app/views"
+    config.mustache.view_path = "app"
 
     # Public: Namespace to look for mustache view classes under.
     #
